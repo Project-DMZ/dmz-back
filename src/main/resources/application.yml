@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    include: dev , secret
+    include: dev , secret , jasypt
 
   servlet:
     multipart:
