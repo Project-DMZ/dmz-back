@@ -13,9 +13,8 @@ import com.dmz.api.community.dto.request.CommunityInsertRequest;
 import com.dmz.api.community.dto.request.CommunitySearch;
 import com.dmz.api.community.enums.Position;
 import com.dmz.api.community.enums.Tech;
-import com.dmz.api.community.repository.CommunityPagingRepository;
+import com.dmz.api.community.repository.CommunityDslRepository;
 import com.dmz.api.community.repository.CommunityRepository;
-import com.dmz.api.community.repository.ReplyRepository;
 import com.dmz.api.community.repository.TechPositionRepository;
 import com.dmz.api.community.repository.TechStackRepository;
 import com.dmz.api.member.domain.Member;
@@ -38,18 +37,24 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CommunityService {
-	private final CommunityPagingRepository communityPagingRepository;
+	private final CommunityDslRepository communityDslRepository;
 	private final CommunityRepository communityRepository;
 	private final TechStackRepository techStackRepository;
 	private final TechPositionRepository positionRepository;
 	private final GetData getData;
 
 	@Transactional(readOnly = true)
+	public Response<?> getCommunityDetail(Long communityId, Long memberId) {
+
+		return Response.ok(communityDslRepository.getCommunityDetail(communityId,memberId));
+	}
+
+	@Transactional(readOnly = true)
 	public Response<?> getCommunityList(CommunitySearch search) {
 
 		PageRequest pageable = search.getPageable(search);
 
-		return Response.list(communityPagingRepository.selectCommunityList(search, pageable));
+		return Response.list(communityDslRepository.selectCommunityList(search, pageable));
 	}
 
 	@Transactional
@@ -74,11 +79,11 @@ public class CommunityService {
 		return Response.ok();
 	}
 
-	private static TechStack getTechStack(Community community, Tech tech) {
+	private TechStack getTechStack(Community community, Tech tech) {
 		return TechStack.builder().tech(tech).community(community).build();
 	}
 
-	private static TechPosition getPosition(Community community, Position position) {
+	private TechPosition getPosition(Community community, Position position) {
 		return TechPosition.builder().position(position).community(community).build();
 	}
 

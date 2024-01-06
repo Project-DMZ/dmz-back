@@ -34,15 +34,15 @@ public class Jwt {
 		return Long.valueOf(authentication.getName());
 	}
 
-	public static String getNonId() {
+	public static Long getNonId() {
 
 		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (authentication == null || authentication.getName().equals("anonymousUser")) {
-			return null;
+			return -1L;
 		}
 
-		return authentication.getName();
+		return Long.valueOf(authentication.getName());
 	}
 
 }

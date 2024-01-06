@@ -1,13 +1,9 @@
 server:
   port: 8080
 
-jasypt:
-  encryptor:
-    password:
-
 spring:
   profiles:
-    include: local , secret
+    include: dev , secret
 
   servlet:
     multipart:

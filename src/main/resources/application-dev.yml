@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://dmz-dev.c9auakg60tyy.ap-northeast-2.rds.amazonaws.com/dmz-dev?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: ENC(FHlMkUlwJ0A08N5amXF92Q==)
-    password: ENC(53LvCfWAmoyFRznIZdW67FVyFUJE6Lg/)
+    username: ENC(3kDqYdZRxEqch9kNGZZssA==)
+    password: ENC(KkY/KGNoPZOvqKVNSN2gcMGnf8mMLbzI)
 
   jpa:
     open-in-view: true
