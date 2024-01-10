@@ -1,6 +1,7 @@
 package com.dmz.api.community.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.Comment;
@@ -10,6 +11,7 @@ import com.dmz.api.community.enums.Process;
 import com.dmz.api.member.domain.Member;
 import com.dmz.global.entity.BaseTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -48,14 +50,14 @@ public class Community extends BaseTime {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 
-	@OneToMany(mappedBy = "community")
-	private List<TechStack> techStackList;
+	@OneToMany(mappedBy = "community" , cascade = CascadeType.ALL)
+	private List<TechStack> techStackList = new ArrayList<>();
 
-	@OneToMany(mappedBy = "community")
+	@OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
 	private List<Reply> replyList;
 
-	@OneToMany(mappedBy = "community")
-	private List<TechPosition> techPositionList;
+	@OneToMany(mappedBy = "community" , cascade = CascadeType.ALL)
+	private List<TechPosition> techPositionList = new ArrayList<>();
 
 	@Comment("제목")
 	@Column(nullable = false, length = 30)

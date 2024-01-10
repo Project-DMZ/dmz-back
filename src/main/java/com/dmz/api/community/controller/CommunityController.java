@@ -12,6 +12,7 @@ import com.dmz.api.community.dto.request.CommunitySearch;
 import com.dmz.api.community.dto.response.detail.CommunityDetailResponse;
 import com.dmz.api.community.dto.response.CommunityResponse;
 import com.dmz.api.community.service.CommunityService;
+import com.dmz.global.constants.GetData;
 import com.dmz.global.jwt.Jwt;
 import com.dmz.global.utils.Response;
 

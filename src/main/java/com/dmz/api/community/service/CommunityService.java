@@ -18,6 +18,8 @@ import com.dmz.api.community.repository.CommunityRepository;
 import com.dmz.api.community.repository.TechPositionRepository;
 import com.dmz.api.community.repository.TechStackRepository;
 import com.dmz.api.member.domain.Member;
+import com.dmz.api.member.exception.MemberNotFoundException;
+import com.dmz.api.member.repository.MemberRepository;
 import com.dmz.global.constants.GetData;
 import com.dmz.global.utils.Response;
 
@@ -41,7 +43,7 @@ public class CommunityService {
 	private final CommunityRepository communityRepository;
 	private final TechStackRepository techStackRepository;
 	private final TechPositionRepository positionRepository;
-	private final GetData getData;
+	private final MemberRepository memberRepository;
 
 	@Transactional(readOnly = true)
 	public Response<?> getCommunityDetail(Long communityId, Long memberId) {
@@ -58,9 +60,9 @@ public class CommunityService {
 	}
 
 	@Transactional
-	public Response<?> addCommunity(CommunityInsertRequest request, Long loginMemberId) {
+	public Response<?> addCommunity(CommunityInsertRequest request, Long memberId) {
 
-		Member member = getData.member(loginMemberId);
+		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
 
 		Community community = CommunityInsertRequest.of(request, member);
 
@@ -70,14 +72,15 @@ public class CommunityService {
 		List<TechPosition> techPositions = request.getPositionList().stream()
 			.map(p -> getPosition(community, p)).toList();
 
-		communityRepository.save(community);
+		techStackRepository.saveAll(techStacks); // 기술스택 디비에 넣고
 
-		techStackRepository.saveAll(techStacks);
+		positionRepository.saveAll(techPositions); // 포지션 디비에 넣고
 
-		positionRepository.saveAll(techPositions);
+		communityRepository.save(community); // 게시판 생성
 
 		return Response.ok();
 	}
+
 
 	private TechStack getTechStack(Community community, Tech tech) {
 		return TechStack.builder().tech(tech).community(community).build();

@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    include: dev , secret , secret
+    default: dev , secret
 
   servlet:
     multipart:
@@ -18,4 +18,3 @@ logging:
           EC2MetadataUtils: error
         internal:
           InstanceMetadataServiceResourceFetcher: error
-

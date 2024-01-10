@@ -1,7 +1,10 @@
 package com.dmz.api.community.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.dmz.api.community.domain.Community;
 import com.dmz.api.community.domain.TechStack;
 
 /**
@@ -16,4 +19,6 @@ import com.dmz.api.community.domain.TechStack;
  * 2023-12-30        MinKyu Park       최초 생성
  */
 public interface TechStackRepository extends JpaRepository<TechStack, Long> {
+	List<TechStack> findByCommunity(Community community);
+
 }
