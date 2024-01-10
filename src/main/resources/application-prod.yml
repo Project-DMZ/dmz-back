@@ -1,9 +1,9 @@
 spring:
-  datasource:
-    url:
-    driver-class-name: org.postgresql.Driver
-    username:
-    password:
+#  datasource:
+#    url:
+#    driver-class-name: org.postgresql.Driver
+#    username:
+#    password:
 
   jpa:
     open-in-view: true

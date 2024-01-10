@@ -54,4 +54,4 @@ public class TempSearch extends Page {
     
         return Response.list(tempRepository.getAdminList(pageable,search));
   }	
-```
+``` 
