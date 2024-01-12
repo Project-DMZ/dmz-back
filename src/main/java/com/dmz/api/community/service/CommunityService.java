@@ -60,9 +60,7 @@ public class CommunityService {
 	}
 
 	@Transactional
-	public Response<?> addCommunity(CommunityInsertRequest request, Long memberId) {
-
-		Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+	public Response<?> addCommunity(CommunityInsertRequest request, Member member) {
 
 		Community community = CommunityInsertRequest.of(request, member);
 
@@ -76,9 +74,9 @@ public class CommunityService {
 
 		positionRepository.saveAll(techPositions); // 포지션 디비에 넣고
 
-		communityRepository.save(community); // 게시판 생성
+		Community save = communityRepository.save(community);// 게시판 생성
 
-		return Response.ok();
+		return Response.ok(save);
 	}
 
 

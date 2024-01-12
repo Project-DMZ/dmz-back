@@ -41,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 public class CommunityController {
 
 	private final CommunityService communityService;
+	private final GetData getData;
 
 	@GetMapping("/{communityId}")
 	@Operation(summary = "게시물 상세 조회", description = "")
@@ -63,6 +64,6 @@ public class CommunityController {
 	@ApiResponse(responseCode = "200", description = "")
 	public Response<?> addCommunity(@RequestBody CommunityInsertRequest request) {
 
-		return communityService.addCommunity(request, Jwt.getId());
+		return communityService.addCommunity(request, getData.member(Jwt.getId()));
 	}
 }
