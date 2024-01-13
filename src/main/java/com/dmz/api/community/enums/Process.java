@@ -1,6 +1,7 @@
 package com.dmz.api.community.enums;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * packageName    : com.dmz.api.community.enums
@@ -14,6 +15,10 @@ import lombok.Getter;
  * 2023-12-30        MinKyu Park       최초 생성
  */
 @Getter
+@RequiredArgsConstructor
 public enum Process {
-	ONLINE , OFFLINE
+	ONLINE("온라인"),
+	OFFLINE("오프라인");
+
+	private final String description;
 }

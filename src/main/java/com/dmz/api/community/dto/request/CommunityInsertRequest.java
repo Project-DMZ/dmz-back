@@ -6,12 +6,14 @@ import java.util.List;
 
 import com.dmz.api.community.domain.Community;
 import com.dmz.api.community.enums.CommunityType;
+import com.dmz.api.community.enums.Position;
 import com.dmz.api.community.enums.Process;
 import com.dmz.api.community.enums.Tech;
 import com.dmz.api.member.domain.Member;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -46,7 +48,10 @@ public class CommunityInsertRequest {
 	private Process process;
 
 	@Schema(type = "array", example = "[\"JAVA\", \"REACT\"]", description = "기술스택 목록")
-	private final List<Tech> techList = new ArrayList<>();
+	private List<Tech> techList = new ArrayList<>();
+
+	@Schema(type = "array", example = "[\"BACKEND\", \"FRONTEND\"]", description = "모집 포지션 목록")
+	private List<Position> positionList = new ArrayList<>();
 
 	public static Community of(CommunityInsertRequest req , Member member) {
 		return Community.builder()
@@ -60,5 +65,25 @@ public class CommunityInsertRequest {
 			.process(req.process)
 			.viewCount(0L)
 			.build();
+	}
+
+	@Builder
+	public CommunityInsertRequest(String title, String content, CommunityType type, LocalDate closingDate,
+		LocalDate startDate, LocalDate endDate, Process process) {
+		this.title = title;
+		this.content = content;
+		this.type = type;
+		this.closingDate = closingDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.process = process;
+	}
+
+	public void setTechList(List<Tech> techList) {
+		this.techList = techList;
+	}
+
+	public void setPositionList(List<Position> positionList) {
+		this.positionList = positionList;
 	}
 }
