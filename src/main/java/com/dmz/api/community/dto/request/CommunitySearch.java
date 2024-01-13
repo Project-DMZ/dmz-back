@@ -21,6 +21,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommunitySearch extends Page {
-	// @Schema(example = "STUDY", description = "STUDY:스터디, PROJECT:프로젝트, MENTORING:멘토링")
-	// private CommunityType type;
+	@Schema(example = "STUDY", description = "STUDY:스터디, PROJECT:프로젝트, MENTORING:멘토링")
+	private CommunityType type;
 }

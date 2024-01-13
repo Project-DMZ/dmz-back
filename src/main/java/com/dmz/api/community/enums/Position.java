@@ -4,24 +4,25 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * packageName    : com.dmz.api.content.enums
- * fileName       : ContentType
+ * packageName    : com.dmz.api.community.enums
+ * fileName       : Position
  * author         : MinKyu Park
- * date           : 2023-12-28
+ * date           : 2024-01-03
  * description    :
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
- * 2023-12-28        MinKyu Park       최초 생성
+ * 2024-01-03        MinKyu Park       최초 생성
  */
 @Getter
 @RequiredArgsConstructor
-public enum CommunityType {
+public enum Position {
 
-	STUDY("스터디"),
-	PROJECT("프로젝트"),
-	MENTORING("멘토링");
+	PLANNER("기획자"),
+	DESIGNER("디자이너"),
+	FRONTEND("프론트엔드"),
+	BACKEND("서버/백엔드"),
+	DEVOPS("데브옵스");
 
 	private final String description;
-
 }
