@@ -1,5 +1,6 @@
 package com.dmz.api.auth.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,9 +27,11 @@ public class JoinRequest {
 	private String providerId;
 
 	// @NotBlank(message = "password: 비밀번호는 필수 값입니다.")
+	@Schema(example = "1234", description = "")
 	private String password;
 
 	// @NotBlank(message = "name: 사용자 이름는 필수 값입니다.")
+	@Schema(example = "DMZ001", description = "")
 	private String nickname;
 
 	// @NotBlank(message = "phone: 휴대폰 번호는 필수 값입니다.")
@@ -36,6 +39,7 @@ public class JoinRequest {
 	// private String phone;
 
 	// @Email(message = "email: 이메일 형식이 올바르지 않습니다.")
+	@Schema(example = "dmz@dmz.com", description = "")
 	private String email;
 
 	@Builder

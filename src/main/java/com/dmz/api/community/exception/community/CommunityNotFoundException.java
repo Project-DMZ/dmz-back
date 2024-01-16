@@ -19,7 +19,7 @@ import lombok.Getter;
 @Getter
 public class CommunityNotFoundException extends GlobalException {
 
-	protected CommunityNotFoundException() {
+	public CommunityNotFoundException() {
 		super("게시물을 찾을 수 없습니다.");
 	}
 
