@@ -41,6 +41,11 @@ pipeline {
             steps {
                 script {
                     // env.BRANCH_NAME = env.GIT_BRANCH.split('/').last()
+                    echo "$ref"
+                    def ref = "$ref"
+                    def val = ref.split('/')
+                    def branch = val[val.size()-1]
+                    echo "$branch"
                     try {
                         sh "echo ${BRANCH_NAME}"
                         if (BRANCH_NAME == 'chhong' || BRANCH_NAME == 'dev') {
