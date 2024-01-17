@@ -41,19 +41,15 @@ pipeline {
             steps {
                 script {
                     // env.BRANCH_NAME = env.GIT_BRANCH.split('/').last()
-                    echo "${ref}"
-                    def ref = "$ref"
-                    def val = ref.split('/')
-                    def branch = val[val.size()-1]
-                    echo "${branch}"
+                    env.BRANCH_NAME = env.GIT_BRANCH.split('/').last()
                     try {
                         sh "echo ${BRANCH_NAME}"
-                        if (BRANCH_NAME == 'chhong' || BRANCH_NAME == 'dev') {
+                        if (env.BRANCH_NAME == 'chhong' || env.BRANCH_NAME == 'dev') {
                             sh 'java --version'
-                            git branch: 'chhong',
+                            git branch: 'dev',
                                 url: 'https://github.com/Project-DMZ/dmz-back'
                         } else if (BRANCH_NAME == 'master') {
-                            git branch: 'master',
+                            git branch: 'main',
                                 url: 'https://github.com/Project-DMZ/dmz-back/'
                         }
                     } catch (Exception e) {
