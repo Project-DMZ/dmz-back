@@ -1,38 +1,3 @@
-// pipeline {
-//     agent any
-//
-//     stages {
-//         stage('Prepare') {
-//             steps {
-//                 echo '=== Prepare ==='
-//                 // git 'https://github.com/Project-DMZ/dmz-back/'
-//                 git branch: 'dev', url: 'https://github.com/Project-DMZ/dmz-back/'
-//             }
-//         }
-//
-//         stage('Build') {
-//             steps {
-//                 echo '=== Build ==='
-//                 sh '''
-//                     chmod +x gradlew
-//                     ./gradlew clean build
-//                 '''
-//             }
-//         }
-//
-//         stage('Deploy') {
-//             steps {
-//                 echo '=== Deploy ==='
-//                 sshPublisher(publishers: [
-//                     sshPublisherDesc(configName: 'DEV-DMZ-WAS-KEY', transfers: [
-//                         sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sh init.sh', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'deploy/', remoteDirectorySDF: false, removePrefix: 'build/libs', sourceFiles: 'build/libs/*.jar')
-//                         ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
-//                     ])
-//             }
-//         }
-//     }
-// }
-
 pipeline {
     agent any
 
@@ -46,7 +11,7 @@ pipeline {
                         sh "echo ${BRANCH_NAME}"
                         if (env.BRANCH_NAME == 'chhong' || env.BRANCH_NAME == 'dev') {
                             sh 'java --version'
-                            git branch: 'dev',
+                            git branch: 'chhong',
                                 url: 'https://github.com/Project-DMZ/dmz-back'
                         } else if (BRANCH_NAME == 'master') {
                             git branch: 'main',
@@ -77,6 +42,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Test') {
+            steps {
+                echo '=== Test ==='
+                sh '''
+                    ./gradlew clean test
+                '''
+                }
+            }
 
         stage('Build') {
             steps {
