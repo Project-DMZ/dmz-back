@@ -65,16 +65,22 @@ pipeline {
         stage('add credentials') {
                     steps {
                         script {
-        //                     def secretContent = readFile("/application-secret")
-        //                      echo "Secret Content: ${secretContent}"
-        //                     sh 'echo "property: ${SECRET_FILE_PATH}" > src/main/resources/application-test.yml'
-
                              withCredentials([file(credentialsId: 'application-secret', variable: 'SECRET_FILE_PATH')]) {
-                                sh 'echo "property: ${SECRET_FILE_PATH}" > src/main/resources/application-test.yml'
-                                echo "File Path: ${SECRET_FILE_PATH}"
-
-                                sh "cat ${SECRET_FILE_PATH}"
+                                sh 'echo "property: ${SECRET_FILE_PATH}" > src/main/resources/application-secret.yml'
                             }
+
+                            withCredentials([file(credentialsId: 'application-test', variable: 'SECRET_FILE_PATH')]) {
+                                sh 'echo "property: ${SECRET_FILE_PATH}" > src/main/resources/application-test.yml'
+                            }
+
+
+                            echo "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"
+                            def yamlFiles = sh(script: "ls ${env.WORKSPACE}/src/main/resources/*.yml", returnStdout: true).trim()
+                            yamlFiles.split("\n").each { yamlFile ->
+                                sh "echo 'Reading contents of ${yamlFile}:'"
+                               sh "cat ${yamlFile}"
+                            }
+                            echo "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"
                         }
                     }
                 }
