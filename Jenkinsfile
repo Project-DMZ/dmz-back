@@ -61,6 +61,24 @@ pipeline {
             }
         }
 
+
+        stage('add credentials') {
+                    steps {
+                        script {
+        //                     def secretContent = readFile("/application-secret")
+        //                      echo "Secret Content: ${secretContent}"
+        //                     sh 'echo "property: ${SECRET_FILE_PATH}" > src/main/resources/application-test.yml'
+
+                             withCredentials([file(credentialsId: 'application-secret', variable: 'SECRET_FILE_PATH')]) {
+                                sh 'echo "property: ${SECRET_FILE_PATH}" > src/main/resources/application-test.yml'
+                                echo "File Path: ${SECRET_FILE_PATH}"
+
+                                sh "cat ${SECRET_FILE_PATH}"
+                            }
+                        }
+                    }
+                }
+
         stage('Build') {
             steps {
                 echo '=== Build ==='
@@ -76,7 +94,7 @@ pipeline {
                 echo '=== Deploy ==='
                 script {
                     sshPublisher(publishers: [
-                        sshPublisherDesc(configName: 'DEV-DMZ-WAS-KEY', transfers: [
+                        sshPublisherDesc(configName: 'jenkins-pem', transfers: [
                             sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sh init.sh', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'deploy/', remoteDirectorySDF: false, removePrefix: 'build/libs', sourceFiles: 'build/libs/*.jar')
                         ], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)
                     ])
