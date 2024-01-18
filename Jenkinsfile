@@ -75,13 +75,13 @@ pipeline {
                           def targetFilePath = "${env.WORKSPACE}/src/main/resources/application-secret.yml"
                           sh "cat ${SECRET_FILE_PATH} >> ${targetFilePath}"
                       }
-                         echo "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"
-                         def yamlFiles = sh(script: "ls ${env.WORKSPACE}/src/main/resources/*.yml", returnStdout: true).trim()
-                         yamlFiles.split("\n").each { yamlFile ->
-                             sh "echo 'Reading contents of ${yamlFile}:'"
-                             sh "cat ${yamlFile}"
-                         }
-                         echo "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"
+//                          echo "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"
+//                          def yamlFiles = sh(script: "ls ${env.WORKSPACE}/src/main/resources/*.yml", returnStdout: true).trim()
+//                          yamlFiles.split("\n").each { yamlFile ->
+//                              sh "echo 'Reading contents of ${yamlFile}:'"
+//                              sh "cat ${yamlFile}"
+//                          }
+//                          echo "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"
                 }
             }
         }
