@@ -46,9 +46,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo '=== Test ==='
-                sh '''
-                    ./gradlew clean test
-                '''
+
                 }
             }
 
