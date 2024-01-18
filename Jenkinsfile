@@ -68,16 +68,12 @@ pipeline {
 
                      withCredentials([file(credentialsId: 'application-test', variable: 'SECRET_FILE_PATH')]) {
                          def targetFilePath = "${env.WORKSPACE}/src/main/resources/application-test.yml"
-                         sh "echo '${SECRET_FILE_PATH}' > ${targetFilePath}"
-//                          sh "cat ${SECRET_FILE_PATH}"
-                         echo "File Path: ${targetFilePath}"
+                         sh "cat ${SECRET_FILE_PATH} >> ${targetFilePath}"
                      }
 
                      withCredentials([file(credentialsId: 'application-secret', variable: 'SECRET_FILE_PATH')]) {
                           def targetFilePath = "${env.WORKSPACE}/src/main/resources/application-secret.yml"
-                          sh "echo '${SECRET_FILE_PATH}' > ${targetFilePath}"
-//                           sh "cat ${SECRET_FILE_PATH}"
-                          echo "File Path: ${targetFilePath}"
+                          sh "cat ${SECRET_FILE_PATH} >> ${targetFilePath}"
                       }
                          echo "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"
                          def yamlFiles = sh(script: "ls ${env.WORKSPACE}/src/main/resources/*.yml", returnStdout: true).trim()
