@@ -36,7 +36,7 @@
 pipeline {
     agent any
 
-    stages {  // 이 부분을 주석 해제하여 stages 블록을 사용합니다.
+    stages {
         stage('Prepare') {
             steps {
                 script {
