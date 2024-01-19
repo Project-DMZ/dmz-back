@@ -52,4 +52,12 @@ public class ReplyService {
 
 		return Response.ok();
 	}
+
+	@Transactional
+	public Response<?> deleteReply(Long replyId) {
+
+		replyRepository.deleteById(replyId);
+
+		return Response.ok();
+	}
 }
