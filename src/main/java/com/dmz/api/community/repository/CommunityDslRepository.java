@@ -4,6 +4,8 @@ import static com.dmz.api.community.domain.QCommunity.*;
 import static com.dmz.api.community.domain.QReply.*;
 import static com.dmz.api.community.domain.QTechPosition.*;
 import static com.dmz.api.community.domain.QTechStack.*;
+import static com.querydsl.core.group.GroupBy.list;
+import static com.querydsl.core.group.GroupBy.*;
 import static com.querydsl.core.types.dsl.Expressions.*;
 
 import java.util.List;
@@ -25,7 +27,6 @@ import com.dmz.api.community.dto.response.detail.QReplyResponse;
 import com.dmz.api.community.dto.response.detail.QTechResponse;
 import com.dmz.api.community.dto.response.detail.ReplyResponse;
 import com.dmz.api.community.dto.response.detail.TechResponse;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -46,21 +47,45 @@ import lombok.RequiredArgsConstructor;
 public class CommunityDslRepository {
 	private final JPAQueryFactory queryFactory;
 
+	//타입
+	//제목
+	//프로필이미지
+	//포지션
+	//기술
+	//마감일
+	//좋아요여부
+	//조회수
+	//댓글수
 	public Page<CommunityResponse> selectCommunityList(CommunitySearch search, Pageable pageable) {
-		List<CommunityResponse> content = queryFactory.select(new QCommunityResponse(
-				community.id,
-				community.title,
-				community.content,
-				community.type
-			)).from(community)
-			// .join(community.techStackList, techStack)
+
+		List<CommunityResponse> content = queryFactory.selectFrom(community)
+			.leftJoin(techPosition).on(techPosition.community.id.eq(community.id))
+			.leftJoin(techStack).on(techStack.community.id.eq(community.id))
+			.where(community.type.eq(search.getType()))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
-			.fetch();
+			.transform(
+				groupBy(community.id).list(
+					new QCommunityResponse(
+						community.id,
+						community.type,
+						community.title,
+						community.member.profile,
+						community.closingDate,
+						FALSE,
+						community.viewCount,
+						community.replyList.size(),
+						list(new QTechResponse(techStack.id, techStack.tech)),
+						list(new QPositionResponse(techPosition.id, techPosition.position))
+					)
+				)
+			);
 
 		Long count = queryFactory.select(community.count())
 			.from(community)
-			// .join(community.techStackList, techStack)
+			.leftJoin(techPosition).on(techPosition.community.id.eq(community.id))
+			.leftJoin(techStack).on(techStack.community.id.eq(community.id))
+			.where(community.type.eq(search.getType()))
 			.fetchOne();
 
 		return new PageImpl<>(content, pageable, count != null ? count : 0L);

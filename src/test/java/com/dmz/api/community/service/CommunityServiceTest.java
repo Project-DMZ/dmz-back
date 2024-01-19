@@ -1,5 +1,6 @@
 package com.dmz.api.community.service;
 
+import static com.dmz.api.community.enums.CommunityType.*;
 import static com.dmz.api.community.enums.Position.*;
 import static com.dmz.api.community.enums.Tech.*;
 import static org.assertj.core.api.Assertions.*;
@@ -15,16 +16,23 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.dmz.api.community.domain.Community;
 import com.dmz.api.community.domain.TechPosition;
 import com.dmz.api.community.domain.TechStack;
 import com.dmz.api.community.dto.request.CommunityInsertRequest;
+import com.dmz.api.community.dto.request.CommunitySearch;
+import com.dmz.api.community.dto.response.CommunityResponse;
 import com.dmz.api.community.enums.CommunityType;
 import com.dmz.api.community.enums.Position;
 import com.dmz.api.community.enums.Process;
 import com.dmz.api.community.enums.Tech;
+import com.dmz.api.community.exception.community.CommunityNotFoundException;
+import com.dmz.api.community.repository.CommunityDslRepository;
 import com.dmz.api.community.repository.CommunityRepository;
 import com.dmz.api.community.repository.TechPositionRepository;
 import com.dmz.api.community.repository.TechStackRepository;
@@ -60,6 +68,9 @@ class CommunityServiceTest {
 	@Autowired
 	private MemberRepository memberRepository;
 
+	@Autowired
+	private CommunityDslRepository communityDslRepository;
+
 	@AfterEach
 	void tearDown() {
 		techStackRepository.deleteAllInBatch();
@@ -80,10 +91,9 @@ class CommunityServiceTest {
 
 		memberRepository.save(member);
 
-		for (int i = 1; i <= 5; i++) {
 			Community community = Community.builder()
-				.title("setUpTitle" + i)
-				.content("setUpContent" + i)
+				.title("setUpTitle")
+				.content("setUpContent")
 				.type(CommunityType.STUDY)
 				.closingDate(LocalDate.parse("2023-12-10"))
 				.startDate(LocalDate.parse("2024-01-10"))
@@ -103,7 +113,31 @@ class CommunityServiceTest {
 
 			techStackRepository.saveAll(techStacks);
 			positionRepository.saveAll(techPositions);
-		}
+
+	}
+
+	@Test
+	@DisplayName("게시물을 단일 조회한다")
+	void getCommunityDetail() {
+		// given
+		Community findCommunity = communityRepository.findAll().get(0);
+
+		Community community = communityRepository.findById(findCommunity.getId()).orElseThrow(CommunityNotFoundException::new);
+
+		// when
+		List<TechStack> stacks1 = techStackRepository.findByCommunity(community);
+		List<TechPosition> positions1 = positionRepository.findByCommunity(community);
+
+		// then
+		assertThat(community.getTitle()).isEqualTo("setUpTitle");
+		assertThat(community.getContent()).isEqualTo("setUpContent");
+		assertThat(community.getProcess()).isEqualByComparingTo(Process.ONLINE);
+		assertThat(stacks1).hasSize(2)
+			.extracting("tech")
+			.containsExactlyInAnyOrder(JAVA, REACT);
+		assertThat(positions1).hasSize(2)
+			.extracting("position")
+			.containsExactlyInAnyOrder(BACKEND, FRONTEND);
 	}
 
 	@Test
@@ -152,34 +186,53 @@ class CommunityServiceTest {
 			.containsExactlyInAnyOrder(BACKEND, FRONTEND);
 	}
 
-	@Test
-	@DisplayName("게시물을 단일 조회한다")
-	void getCommunityDetail() {
-		// given
-		Community community = communityRepository.findAll().get(0);
 
-		// when
-		List<TechStack> stacks1 = techStackRepository.findByCommunity(community);
-		List<TechPosition> positions1 = positionRepository.findByCommunity(community);
-
-		// then
-		assertThat(community.getTitle()).isEqualTo("setUpTitle1");
-		assertThat(community.getContent()).isEqualTo("setUpContent1");
-		assertThat(community.getProcess()).isEqualByComparingTo(Process.ONLINE);
-		assertThat(stacks1).hasSize(2)
-			.extracting("tech")
-			.containsExactlyInAnyOrder(JAVA, REACT);
-		assertThat(positions1).hasSize(2)
-			.extracting("position")
-			.containsExactlyInAnyOrder(BACKEND, FRONTEND);
-	}
 
 	@Test
 	@DisplayName("게시물 목록을 페이지,타입별로 조회한다")
 	void getCommunityList() {
 		// given
+		Member member = Member.builder()
+			.email("list@dmz.com")
+			.password("1234")
+			.nickname("listUser")
+			.providerId("listUserProviderId")
+			.profile("listUserProfileImage.jpg")
+			.build();
+
+		memberRepository.save(member);
+
+		for (int i = 1; i <= 5; i++) {
+			Community community = Community.builder()
+				.title("setUpTitle" + i)
+				.content("setUpContent" + i)
+				.type(CommunityType.STUDY)
+				.closingDate(LocalDate.parse("2023-12-10"))
+				.startDate(LocalDate.parse("2024-01-10"))
+				.endDate(LocalDate.parse("2024-02-29"))
+				.process(Process.ONLINE)
+				.build();
+
+			Community save = communityRepository.save(community);
+
+			List<TechStack> techStacks = Stream.of(JAVA, REACT)
+				.map(t -> TechStack.builder().tech(t).community(save).build())
+				.toList();
+
+			List<TechPosition> techPositions = Stream.of(BACKEND, FRONTEND)
+				.map(p -> TechPosition.builder().position(p).community(save).build())
+				.toList();
+
+			techStackRepository.saveAll(techStacks);
+			positionRepository.saveAll(techPositions);
+		}
+
+		CommunitySearch search = new CommunitySearch();
+		search.setType(STUDY);
+		Pageable pageable = PageRequest.of(0, 2);
 
 		// when
+		Page<CommunityResponse> communityList = communityDslRepository.selectCommunityList(search, pageable);
 
 		// then
 	}
