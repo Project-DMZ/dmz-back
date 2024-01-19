@@ -65,7 +65,7 @@ public class CommunityController {
 	@ApiResponse(responseCode = "200", description = "")
 	public Response<?> addCommunity(@RequestBody CommunityInsertRequest request) {
 
-		return communityService.addCommunity(request, getData.member(Jwt.getId()));
+		return communityService.addCommunity(request, getData.member(1L));
 	}
 
 	@DeleteMapping("/{communityId}")

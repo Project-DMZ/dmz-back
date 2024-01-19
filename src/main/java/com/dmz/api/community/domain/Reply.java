@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -45,4 +46,12 @@ public class Reply extends BaseTime {
 	@Comment("내용")
 	@Column(nullable = false, length = 50)
 	private String content;
+
+	@Builder
+	public Reply(Long id, Member member, Community community, String content) {
+		this.id = id;
+		this.member = member;
+		this.community = community;
+		this.content = content;
+	}
 }
