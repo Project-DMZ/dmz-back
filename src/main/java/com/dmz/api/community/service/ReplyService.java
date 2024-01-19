@@ -1,11 +1,13 @@
 package com.dmz.api.community.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dmz.api.community.domain.Community;
 import com.dmz.api.community.domain.Reply;
 import com.dmz.api.community.dto.request.ReplyInsertRequest;
 import com.dmz.api.community.exception.community.CommunityNotFoundException;
+import com.dmz.api.community.exception.reply.ReplyNotFoundException;
 import com.dmz.api.community.repository.CommunityRepository;
 import com.dmz.api.community.repository.ReplyRepository;
 import com.dmz.api.member.domain.Member;
@@ -37,6 +39,16 @@ public class ReplyService {
 		Reply saveReply = ReplyInsertRequest.of(community, request, member);
 
 		replyRepository.save(saveReply);
+
+		return Response.ok();
+	}
+
+	@Transactional
+	public Response<?> updateReply(Long replyId, ReplyInsertRequest request) {
+
+		Reply reply = replyRepository.findById(replyId).orElseThrow(ReplyNotFoundException::new);
+
+		reply.update(request.getContent());
 
 		return Response.ok();
 	}

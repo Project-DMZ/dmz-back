@@ -54,4 +54,8 @@ public class Reply extends BaseTime {
 		this.community = community;
 		this.content = content;
 	}
+
+	public void update(String content) {
+		this.content = content;
+	}
 }

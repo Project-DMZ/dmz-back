@@ -1,5 +1,6 @@
 package com.dmz.api.community.controller;
 
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,5 +40,12 @@ public class ReplyController {
 	public Response<?> addReply(@PathVariable Long communityId, @RequestBody ReplyInsertRequest request) {
 
 		return replyService.addReply(communityId,request,getData.member(1L));
+	}
+
+	@PatchMapping("/{replyId}")
+	@Operation(summary = "댓글 수정", description = "")
+	public Response<?> updateReply(@PathVariable Long replyId, @RequestBody ReplyInsertRequest request) {
+
+		return replyService.updateReply(replyId, request);
 	}
 }
