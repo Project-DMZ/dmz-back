@@ -14,7 +14,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,7 +48,8 @@ public class TechPosition extends BaseTime {
 	private Position position;
 
 	@Builder
-	public TechPosition(Community community, Position position) {
+	public TechPosition(Long id, Community community, Position position) {
+		this.id = id;
 		this.community = community;
 		this.position = position;
 	}

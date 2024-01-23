@@ -48,7 +48,8 @@ public class TechStack extends BaseTime {
 	private Tech tech;
 
 	@Builder
-	public TechStack(Community community, Tech tech) {
+	public TechStack(Long id, Community community, Tech tech) {
+		this.id = id;
 		this.community = community;
 		this.tech = tech;
 	}

@@ -1,5 +1,6 @@
 package com.dmz.api.community.controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dmz.api.community.dto.request.CommunityInsertRequest;
 import com.dmz.api.community.dto.request.CommunitySearch;
-import com.dmz.api.community.dto.response.detail.CommunityDetailResponse;
 import com.dmz.api.community.dto.response.CommunityResponse;
+import com.dmz.api.community.dto.response.detail.CommunityDetailResponse;
 import com.dmz.api.community.service.CommunityService;
 import com.dmz.global.constants.GetData;
 import com.dmz.global.jwt.Jwt;
@@ -64,6 +65,13 @@ public class CommunityController {
 	@ApiResponse(responseCode = "200", description = "")
 	public Response<?> addCommunity(@RequestBody CommunityInsertRequest request) {
 
-		return communityService.addCommunity(request, getData.member(Jwt.getId()));
+		return communityService.addCommunity(request, getData.member(1L));
+	}
+
+	@DeleteMapping("/{communityId}")
+	@Operation(summary = "게시물 삭제", description = "")
+	public Response<?> deleteCommunity(@PathVariable Long communityId) {
+
+		return communityService.deleteCommunity(communityId);
 	}
 }

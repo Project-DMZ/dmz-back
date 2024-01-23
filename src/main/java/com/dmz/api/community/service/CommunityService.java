@@ -18,9 +18,7 @@ import com.dmz.api.community.repository.CommunityRepository;
 import com.dmz.api.community.repository.TechPositionRepository;
 import com.dmz.api.community.repository.TechStackRepository;
 import com.dmz.api.member.domain.Member;
-import com.dmz.api.member.exception.MemberNotFoundException;
 import com.dmz.api.member.repository.MemberRepository;
-import com.dmz.global.constants.GetData;
 import com.dmz.global.utils.Response;
 
 import lombok.RequiredArgsConstructor;
@@ -48,7 +46,7 @@ public class CommunityService {
 	@Transactional(readOnly = true)
 	public Response<?> getCommunityDetail(Long communityId, Long memberId) {
 
-		return Response.ok(communityDslRepository.getCommunityDetail(communityId,memberId));
+		return Response.ok(communityDslRepository.getCommunityDetail(communityId, memberId));
 	}
 
 	@Transactional(readOnly = true)
@@ -79,7 +77,6 @@ public class CommunityService {
 		return Response.ok(save);
 	}
 
-
 	private TechStack getTechStack(Community community, Tech tech) {
 		return TechStack.builder().tech(tech).community(community).build();
 	}
@@ -88,4 +85,11 @@ public class CommunityService {
 		return TechPosition.builder().position(position).community(community).build();
 	}
 
+	@Transactional
+	public Response<?> deleteCommunity(Long communityId) {
+
+		communityRepository.deleteById(communityId);
+
+		return Response.ok();
+	}
 }
