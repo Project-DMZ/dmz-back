@@ -55,10 +55,19 @@ pipeline {
                 echo '=== Build ==='
                 sh '''
                     chmod +x gradlew
-                    ./gradlew clean build
+                    ./gradlew --warning-mode all --parallel clean build
                 '''
             }
         }
+//         stage('Build') {
+//             steps {
+//                 echo '=== Build ==='
+//                 sh '''
+//                     chmod +x gradlew
+//                     ./gradlew clean build
+//                 '''
+//             }
+//         }
 
         stage('Deploy') {
             steps {
