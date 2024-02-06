@@ -20,16 +20,11 @@ import lombok.Getter;
 @Builder
 public class CommunityDetailBuilder {
 	private CommunityDetailResponse community;
-	private List<TechResponse> techList;
-	private List<PositionResponse> positionList;
 	private List<ReplyResponse> replyList;
 
-	public static CommunityDetailBuilder of(CommunityDetailResponse community, List<TechResponse> techList,
-		List<PositionResponse> positionList, List<ReplyResponse> replyList) {
+	public static CommunityDetailBuilder of(CommunityDetailResponse community,List<ReplyResponse> replyList) {
 		return CommunityDetailBuilder.builder()
 			.community(community)
-			.techList(techList)
-			.positionList(positionList)
 			.replyList(replyList)
 			.build();
 	}

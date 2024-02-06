@@ -2,10 +2,6 @@ package com.dmz.api.community.repository;
 
 import static com.dmz.api.community.domain.QCommunity.*;
 import static com.dmz.api.community.domain.QReply.*;
-import static com.dmz.api.community.domain.QTechPosition.*;
-import static com.dmz.api.community.domain.QTechStack.*;
-import static com.querydsl.core.group.GroupBy.list;
-import static com.querydsl.core.group.GroupBy.*;
 import static com.querydsl.core.types.dsl.Expressions.*;
 
 import java.util.List;
@@ -14,19 +10,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.dmz.api.community.dto.request.CommunitySearch;
 import com.dmz.api.community.dto.response.CommunityResponse;
 import com.dmz.api.community.dto.response.QCommunityResponse;
 import com.dmz.api.community.dto.response.detail.CommunityDetailBuilder;
 import com.dmz.api.community.dto.response.detail.CommunityDetailResponse;
-import com.dmz.api.community.dto.response.detail.PositionResponse;
 import com.dmz.api.community.dto.response.detail.QCommunityDetailResponse;
-import com.dmz.api.community.dto.response.detail.QPositionResponse;
 import com.dmz.api.community.dto.response.detail.QReplyResponse;
-import com.dmz.api.community.dto.response.detail.QTechResponse;
 import com.dmz.api.community.dto.response.detail.ReplyResponse;
-import com.dmz.api.community.dto.response.detail.TechResponse;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -56,36 +50,38 @@ public class CommunityDslRepository {
 	//좋아요여부
 	//조회수
 	//댓글수
-	public Page<CommunityResponse> selectCommunityList(CommunitySearch search, Pageable pageable) {
+	public Page<?> selectCommunityList(CommunitySearch search, Pageable pageable) {
 
-		List<CommunityResponse> content = queryFactory.selectFrom(community)
-			.leftJoin(techPosition).on(techPosition.community.id.eq(community.id))
-			.leftJoin(techStack).on(techStack.community.id.eq(community.id))
-			.where(community.type.eq(search.getType()))
+		List<CommunityResponse> content = queryFactory.select(new QCommunityResponse(
+				community.id,
+				community.type,
+				community.title,
+				community.member.profile,
+				community.closingDate,
+				FALSE,
+				community.viewCount,
+				community.replyList.size(),
+				community.stack,
+				community.positions
+			)).from(community)
+			.where(
+				community.type.eq(search.getType()),
+				keywordContains(search),
+				stackContains(search),
+				positionContains(search)
+			)
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
-			.transform(
-				groupBy(community.id).list(
-					new QCommunityResponse(
-						community.id,
-						community.type,
-						community.title,
-						community.member.profile,
-						community.closingDate,
-						FALSE,
-						community.viewCount,
-						community.replyList.size(),
-						list(new QTechResponse(techStack.id, techStack.tech)),
-						list(new QPositionResponse(techPosition.id, techPosition.position))
-					)
-				)
-			);
+			.fetch();
 
 		Long count = queryFactory.select(community.count())
 			.from(community)
-			.leftJoin(techPosition).on(techPosition.community.id.eq(community.id))
-			.leftJoin(techStack).on(techStack.community.id.eq(community.id))
-			.where(community.type.eq(search.getType()))
+			.where(
+				community.type.eq(search.getType()),
+				keywordContains(search),
+				stackContains(search),
+				positionContains(search)
+			)
 			.fetchOne();
 
 		return new PageImpl<>(content, pageable, count != null ? count : 0L);
@@ -106,27 +102,12 @@ public class CommunityDslRepository {
 				community.endDate,
 				community.process,
 				community.content,
-				community.member.id.eq(memberId)
+				community.member.id.eq(memberId),
+				community.stack,
+				community.positions
 			)).from(community)
+			.where(community.id.eq(communityId))
 			.fetchOne();
-
-		List<PositionResponse> p = queryFactory.select(new QPositionResponse(
-				techPosition.id,
-				techPosition.position
-			))
-			.from(techPosition)
-			.join(techPosition.community)
-			.where(techPosition.community.id.eq(communityId))
-			.fetch();
-
-		List<TechResponse> t = queryFactory.select(new QTechResponse(
-				techStack.id,
-				techStack.tech
-			))
-			.from(techStack)
-			.join(techStack.community)
-			.where(techStack.community.id.eq(communityId))
-			.fetch();
 
 		List<ReplyResponse> r = queryFactory.select(new QReplyResponse(
 				reply.id,
@@ -142,6 +123,31 @@ public class CommunityDslRepository {
 			.orderBy(reply.createdAt.desc())
 			.fetch();
 
-		return CommunityDetailBuilder.of(c, t, p, r);
+		return CommunityDetailBuilder.of(c, r);
+	}
+
+	private BooleanExpression keywordContains(CommunitySearch search) {
+		return StringUtils.hasText(search.getKeyword()) ?
+			community.content.contains(search.getKeyword()).or(community.title.contains(search.getKeyword())) : null;
+	}
+
+	private BooleanExpression stackContains(CommunitySearch search) {
+		if (search.getTechList().size() > 0) {
+			return search.getTechList().stream()
+				.map(s -> community.stack.contains(s.name()))
+				.reduce(BooleanExpression::or)
+				.orElse(null);
+		}
+		return null;
+	}
+
+	private BooleanExpression positionContains(CommunitySearch search) {
+		if (search.getPositionList().size() > 0) {
+			return search.getPositionList().stream()
+				.map(p -> community.positions.contains(p.name()))
+				.reduce(BooleanExpression::or)
+				.orElse(null);
+		}
+		return null;
 	}
 }

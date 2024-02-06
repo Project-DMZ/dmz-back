@@ -1,12 +1,9 @@
 package com.dmz.api.community.dto.response.detail;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.dmz.api.community.enums.CommunityType;
-import com.dmz.api.community.enums.Position;
 import com.dmz.api.community.enums.Process;
-import com.dmz.api.community.enums.Tech;
 import com.querydsl.core.annotations.QueryProjection;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -65,11 +62,15 @@ public class CommunityDetailResponse {
 	private String content;
 	private Boolean isWriter;
 
+	private String stacks;
+	private String positions;
+
 	@QueryProjection
 	public CommunityDetailResponse(Long id, String title, Long viewCount, Boolean isLike, String profile,
 		String nickname,
 		LocalDate closingDate, CommunityType type, LocalDate startDate, LocalDate endDate, Process process,
-		String content,Boolean isWriter) {
+		String content,
+		Boolean isWriter, String stacks, String positions) {
 		this.id = id;
 		this.title = title;
 		this.viewCount = viewCount;
@@ -83,5 +84,7 @@ public class CommunityDetailResponse {
 		this.process = process;
 		this.content = content;
 		this.isWriter = isWriter;
+		this.stacks = stacks;
+		this.positions = positions;
 	}
 }

@@ -1,22 +1,14 @@
 package com.dmz.api.community.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dmz.api.community.domain.Community;
-import com.dmz.api.community.domain.TechPosition;
-import com.dmz.api.community.domain.TechStack;
 import com.dmz.api.community.dto.request.CommunityInsertRequest;
 import com.dmz.api.community.dto.request.CommunitySearch;
-import com.dmz.api.community.enums.Position;
-import com.dmz.api.community.enums.Tech;
 import com.dmz.api.community.repository.CommunityDslRepository;
 import com.dmz.api.community.repository.CommunityRepository;
-import com.dmz.api.community.repository.TechPositionRepository;
-import com.dmz.api.community.repository.TechStackRepository;
 import com.dmz.api.member.domain.Member;
 import com.dmz.api.member.repository.MemberRepository;
 import com.dmz.global.utils.Response;
@@ -39,8 +31,6 @@ import lombok.RequiredArgsConstructor;
 public class CommunityService {
 	private final CommunityDslRepository communityDslRepository;
 	private final CommunityRepository communityRepository;
-	private final TechStackRepository techStackRepository;
-	private final TechPositionRepository positionRepository;
 	private final MemberRepository memberRepository;
 
 	@Transactional(readOnly = true)
@@ -62,27 +52,9 @@ public class CommunityService {
 
 		Community community = CommunityInsertRequest.of(request, member);
 
-		List<TechStack> techStacks = request.getTechList().stream()
-			.map(t -> getTechStack(community, t)).toList();
+		communityRepository.save(community);// 게시판 생성
 
-		List<TechPosition> techPositions = request.getPositionList().stream()
-			.map(p -> getPosition(community, p)).toList();
-
-		techStackRepository.saveAll(techStacks); // 기술스택 디비에 넣고
-
-		positionRepository.saveAll(techPositions); // 포지션 디비에 넣고
-
-		Community save = communityRepository.save(community);// 게시판 생성
-
-		return Response.ok(save);
-	}
-
-	private TechStack getTechStack(Community community, Tech tech) {
-		return TechStack.builder().tech(tech).community(community).build();
-	}
-
-	private TechPosition getPosition(Community community, Position position) {
-		return TechPosition.builder().position(position).community(community).build();
+		return Response.ok();
 	}
 
 	@Transactional

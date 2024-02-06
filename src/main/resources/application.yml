@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    default: local , secret
+    default: dev , secret
 
   servlet:
     multipart:

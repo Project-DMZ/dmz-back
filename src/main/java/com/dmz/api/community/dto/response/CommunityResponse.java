@@ -1,10 +1,7 @@
 package com.dmz.api.community.dto.response;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import com.dmz.api.community.dto.response.detail.PositionResponse;
-import com.dmz.api.community.dto.response.detail.TechResponse;
 import com.dmz.api.community.enums.CommunityType;
 import com.querydsl.core.annotations.QueryProjection;
 
@@ -43,14 +40,13 @@ public class CommunityResponse {
 	@Schema(example = "15", description = "댓글수")
 	private Integer replyCount;
 	@Schema(type = "array", example = "[\"JAVA\", \"REACT\"]", description = "기술스택 목록")
-	private List<TechResponse> techList;
+	private String stacks;
 	@Schema(type = "array", example = "[\"BACKEND\", \"FRONTEND\"]", description = "포지션 목록")
-	private List<PositionResponse> positionList;
+	private String positions;
 
 	@QueryProjection
 	public CommunityResponse(Long id, CommunityType type, String title, String profile, LocalDate closingDate,
-		Boolean isLike, Long viewCount, Integer replyCount, List<TechResponse> techList,
-		List<PositionResponse> positionList) {
+		Boolean isLike, Long viewCount, Integer replyCount, String stacks, String positions) {
 		this.id = id;
 		this.type = type;
 		this.title = title;
@@ -59,7 +55,7 @@ public class CommunityResponse {
 		this.isLike = isLike;
 		this.viewCount = viewCount;
 		this.replyCount = replyCount;
-		this.techList = techList;
-		this.positionList = positionList;
+		this.stacks = stacks;
+		this.positions = positions;
 	}
 }
