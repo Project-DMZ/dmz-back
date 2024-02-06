@@ -39,8 +39,8 @@ public class ReplyController {
 	@PostMapping("/{communityId}")
 	@Operation(summary = "댓글 작성", description = "")
 	public Response<?> addReply(@PathVariable Long communityId, @RequestBody ReplyInsertRequest request) {
-
-		return replyService.addReply(communityId,request,getData.member(1L));
+		// 로그인 임시처리
+		return replyService.addReply(communityId, request, getData.member(1L));
 	}
 
 	@PatchMapping("/{replyId}")

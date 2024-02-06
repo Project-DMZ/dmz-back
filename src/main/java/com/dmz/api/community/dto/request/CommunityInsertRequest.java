@@ -64,6 +64,8 @@ public class CommunityInsertRequest {
 			.endDate(req.endDate)
 			.process(req.process)
 			.viewCount(0L)
+			.stack(req.getTechList().toString())
+			.positions(req.getPositionList().toString())
 			.build();
 	}
 

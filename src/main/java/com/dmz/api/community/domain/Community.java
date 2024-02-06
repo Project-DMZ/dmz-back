@@ -1,7 +1,6 @@
 package com.dmz.api.community.domain;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.Comment;
@@ -50,14 +49,14 @@ public class Community extends BaseTime {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Member member;
 
-	@OneToMany(mappedBy = "community" , cascade = CascadeType.ALL)
-	private List<TechStack> techStackList = new ArrayList<>();
-
 	@OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
 	private List<Reply> replyList;
 
-	@OneToMany(mappedBy = "community" , cascade = CascadeType.ALL)
-	private List<TechPosition> techPositionList = new ArrayList<>();
+	// @OneToMany(mappedBy = "community" , cascade = CascadeType.ALL)
+	// private List<TechStack> techStackList = new ArrayList<>();
+	//
+	// @OneToMany(mappedBy = "community" , cascade = CascadeType.ALL)
+	// private List<TechPosition> techPositionList = new ArrayList<>();
 
 	@Comment("제목")
 	@Column(nullable = false, length = 30)
@@ -91,14 +90,19 @@ public class Community extends BaseTime {
 	@Enumerated(EnumType.STRING)
 	private Process process;
 
+	@Comment("기술스택")
+	private String stack;
+
+	@Comment("포지션")
+	private String positions;
+
 	@Builder
-	public Community(Member member, List<TechStack> techStackList, List<Reply> replyList,
-		List<TechPosition> techPositionList, String title, CommunityType type, String content, LocalDate closingDate,
-		LocalDate startDate, LocalDate endDate, Long viewCount, Process process) {
+	public Community(Long id, Member member, List<Reply> replyList, String title, CommunityType type, String content,
+		LocalDate closingDate, LocalDate startDate, LocalDate endDate, Long viewCount, Process process, String stack,
+		String positions) {
+		this.id = id;
 		this.member = member;
-		this.techStackList = techStackList;
 		this.replyList = replyList;
-		this.techPositionList = techPositionList;
 		this.title = title;
 		this.type = type;
 		this.content = content;
@@ -107,5 +111,7 @@ public class Community extends BaseTime {
 		this.endDate = endDate;
 		this.viewCount = viewCount;
 		this.process = process;
+		this.stack = stack;
+		this.positions = positions;
 	}
 }

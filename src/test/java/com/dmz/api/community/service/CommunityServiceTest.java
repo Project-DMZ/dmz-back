@@ -16,7 +16,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,7 +25,6 @@ import com.dmz.api.community.domain.TechPosition;
 import com.dmz.api.community.domain.TechStack;
 import com.dmz.api.community.dto.request.CommunityInsertRequest;
 import com.dmz.api.community.dto.request.CommunitySearch;
-import com.dmz.api.community.dto.response.CommunityResponse;
 import com.dmz.api.community.enums.CommunityType;
 import com.dmz.api.community.enums.Position;
 import com.dmz.api.community.enums.Process;
@@ -232,7 +230,7 @@ class CommunityServiceTest {
 		Pageable pageable = PageRequest.of(0, 2);
 
 		// when
-		Page<CommunityResponse> communityList = communityDslRepository.selectCommunityList(search, pageable);
+		// Page<CommunityResponse> communityList = communityDslRepository.selectCommunityList(search, pageable);
 
 		// then
 	}

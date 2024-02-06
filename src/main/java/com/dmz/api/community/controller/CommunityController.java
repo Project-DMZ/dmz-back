@@ -47,10 +47,11 @@ public class CommunityController {
 	@GetMapping("/{communityId}")
 	@Operation(summary = "게시물 상세 조회", description = "")
 	@ApiResponse(responseCode = "200", description = "", content = @Content(schema = @Schema(implementation = CommunityDetailResponse.class)))
-	public Response<?> getCommunityDetail(@PathVariable Long communityId) {
+	public Response<?> getCommunityDetail(@PathVariable(name = "communityId") Long communityId) {
 
-		return communityService.getCommunityDetail(communityId,Jwt.getNonId());
+		return communityService.getCommunityDetail(communityId, Jwt.getNonId());
 	}
+
 
 	@GetMapping
 	@Operation(summary = "게시물 조회", description = "메서드에 대한 설명")
@@ -64,7 +65,7 @@ public class CommunityController {
 	@Operation(summary = "게시물 등록", description = "")
 	@ApiResponse(responseCode = "200", description = "")
 	public Response<?> addCommunity(@RequestBody CommunityInsertRequest request) {
-
+		// 로그인은 임시 처리
 		return communityService.addCommunity(request, getData.member(1L));
 	}
 
