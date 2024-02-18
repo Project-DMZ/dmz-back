@@ -4,6 +4,7 @@ import static com.dmz.api.community.domain.QCommunity.*;
 import static com.dmz.api.community.domain.QReply.*;
 import static com.querydsl.core.types.dsl.Expressions.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -68,7 +69,8 @@ public class CommunityDslRepository {
 				community.type.eq(search.getType()),
 				keywordContains(search),
 				stackContains(search),
-				positionContains(search)
+				positionContains(search),
+				isRecruiting(search)
 			)
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
@@ -80,7 +82,8 @@ public class CommunityDslRepository {
 				community.type.eq(search.getType()),
 				keywordContains(search),
 				stackContains(search),
-				positionContains(search)
+				positionContains(search),
+				isRecruiting(search)
 			)
 			.fetchOne();
 
@@ -149,5 +152,11 @@ public class CommunityDslRepository {
 				.orElse(null);
 		}
 		return null;
+	}
+
+	private BooleanExpression isRecruiting(CommunitySearch search) {
+
+
+		return search.getIsRecruiting() != null && search.getIsRecruiting() ? community.closingDate.goe(LocalDate.now()) : null;
 	}
 }
