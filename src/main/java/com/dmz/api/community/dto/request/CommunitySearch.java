@@ -32,6 +32,9 @@ public class CommunitySearch extends Page {
 	@Schema(example = "검색어", description = "제목 또는 내용 검색")
 	private String keyword;
 
+	@Schema(example = "true", description = "모집중인 게시글만 보기 - true / false")
+	private Boolean isRecruiting;
+
 	private List<Tech> techList = new ArrayList<>();
 
 	private List<Position> positionList = new ArrayList<>();
