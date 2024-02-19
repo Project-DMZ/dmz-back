@@ -69,7 +69,6 @@ pipeline {
 //             }
 //         }
 
-
         stage('Deploy') {
             steps {
                 echo '=== Deploy ==='
