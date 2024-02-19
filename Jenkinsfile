@@ -9,10 +9,10 @@ pipeline {
                     env.BRANCH_NAME = env.GIT_BRANCH.split('/').last()
                     try {
                         sh "echo ${BRANCH_NAME}"
-//                         if (env.BRANCH_NAME == 'chhong' || env.BRANCH_NAME == 'dev') {
-                        if (env.BRANCH_NAME == 'dev') {
+                        if (env.BRANCH_NAME == 'chhong' || env.BRANCH_NAME == 'dev') {
+//                         if (env.BRANCH_NAME == 'dev') {
                             sh 'java --version'
-                            git branch: 'dev',
+                            git branch: 'chhong',
                                 url: 'https://github.com/Project-DMZ/dmz-back'
                         } else if (BRANCH_NAME == 'master') {
                             git branch: 'main',
