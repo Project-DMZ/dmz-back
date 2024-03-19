@@ -3,6 +3,7 @@ package com.dmz.api.community.controller;
 import com.dmz.api.community.dto.request.CommunityInsertRequest;
 import com.dmz.api.member.domain.Member;
 import com.dmz.support.IntegrateControllerTestSupport;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,10 @@ class CommunityControllerTest extends IntegrateControllerTestSupport {
 
     }
 
-//    @AfterEach
-//    void tearDown() {
-//        memberRepository.deleteAllInBatch();
-//    }
+    @AfterEach
+    void tearDown() {
+        memberRepository.deleteAllInBatch();
+    }
 
     @DisplayName("요청에 따른 게시물을 등록합니다.")
     @Test
