@@ -1,10 +1,9 @@
 package com.dmz.api.member.repository;
 
-import java.util.Optional;
-
+import com.dmz.api.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.dmz.api.member.domain.Member;
+import java.util.Optional;
 
 /**
  * packageName    : com.dmz.api.member.repository
