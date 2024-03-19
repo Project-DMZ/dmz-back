@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import static com.dmz.api.community.enums.CommunityType.STUDY;
 import static com.dmz.api.community.enums.Position.BACKEND;
 import static com.dmz.api.community.enums.Position.FRONTEND;
