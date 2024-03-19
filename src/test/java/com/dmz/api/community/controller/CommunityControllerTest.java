@@ -7,6 +7,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +17,8 @@ import static com.dmz.api.community.enums.Position.BACKEND;
 import static com.dmz.api.community.enums.Position.FRONTEND;
 import static com.dmz.api.community.enums.Process.ONLINE;
 import static com.dmz.api.community.enums.Tech.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 class CommunityControllerTest extends IntegrateControllerTestSupport {
@@ -57,12 +61,12 @@ class CommunityControllerTest extends IntegrateControllerTestSupport {
         request.setTechList(List.of(JAVA, JAVASCRIPT, REACT));
 
         // when // then
-//        mockMvc.perform(MockMvcRequestBuilders.post("/api/community")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(om.writeValueAsBytes(request))
-//                )
-//                .andDo(print())
-//                .andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/community")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsBytes(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
 }
