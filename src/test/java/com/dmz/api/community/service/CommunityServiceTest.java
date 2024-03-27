@@ -12,6 +12,8 @@ import com.dmz.api.community.repository.CommunityDslRepository;
 import com.dmz.api.community.repository.CommunityRepository;
 import com.dmz.api.member.domain.Member;
 import com.dmz.api.member.repository.MemberRepository;
+import com.dmz.global.utils.Response;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -30,6 +33,7 @@ import java.util.stream.Stream;
 import static com.dmz.api.community.enums.CommunityType.STUDY;
 import static com.dmz.api.community.enums.Position.BACKEND;
 import static com.dmz.api.community.enums.Position.FRONTEND;
+import static com.dmz.api.community.enums.Process.ONLINE;
 import static com.dmz.api.community.enums.Tech.JAVA;
 import static com.dmz.api.community.enums.Tech.REACT;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,6 +57,91 @@ class CommunityServiceTest {
 	private CommunityService communityService;
 	@Autowired
 	private CommunityRepository communityRepository;
+
+	@Autowired
+	private MemberRepository memberRepository;
+
+	@Autowired
+	ObjectMapper om;
+
+	@BeforeEach
+	void beforeEach() {
+		Member member = Member.builder()
+				.email("setUp@dmz.com")
+				.password("1234")
+				.nickname("setUpNickname")
+				.providerId("setUpProviderId1")
+				.profile("setUpProfileImage.jpg")
+				.build();
+
+		memberRepository.save(member);
+
+		CommunityInsertRequest request = CommunityInsertRequest.builder()
+				.title("title1")
+				.content("content1")
+				.process(ONLINE)
+				.type(STUDY)
+				.startDate(LocalDate.of(2024, 3, 27))
+				.endDate(LocalDate.of(2024, 3, 27))
+				.closingDate(LocalDate.of(2024, 3, 27))
+				.build();
+		communityRepository.save(CommunityInsertRequest.of(request, member));
+	}
+
+	@AfterEach
+	void tearDown() {
+		communityRepository.deleteAllInBatch();
+		memberRepository.deleteAllInBatch();
+	}
+
+	@DisplayName("게시물을 조회한다.")
+	@Test
+	void getCommunityDetail() {
+	    // given // when
+		Response<?> communityTarget = communityService.getCommunityDetail(1L, 1L);
+
+		// then
+		assertThat(communityTarget.getData()).isNotNull();
+		assertThat(communityTarget.getStatus()).isEqualTo(HttpStatus.OK);
+//		assertThat(communityTarget.getData()).extracting("title", "content")
+//				.contains("title1", "content1");
+
+	}
+
+	@DisplayName("게시물을 추가하면 200 응답이 반환된다.")
+	@Test
+	void addCommunity() {
+	    // given
+		Member member = Member.builder()
+				.email("set2Up@dmz.com")
+				.password("1234")
+				.nickname("setUpNickname")
+				.providerId("setUpProviderId2")
+				.profile("setUpProfileImage.jpg")
+				.build();
+
+		memberRepository.save(member);
+
+		CommunityInsertRequest request = CommunityInsertRequest.builder()
+				.title("title2")
+				.content("content2")
+				.process(ONLINE)
+				.type(STUDY)
+				.startDate(LocalDate.of(2024, 3, 27))
+				.endDate(LocalDate.of(2024, 3, 27))
+				.closingDate(LocalDate.of(2024, 3, 27))
+				.build();
+
+		// when
+		Response<?> result = communityService.addCommunity(request, member);
+
+	    // then
+		assertThat(result).isNotNull();
+		assertThat(result.getStatus()).isEqualTo(HttpStatus.OK);
+	}
+
+
+
 
 //	@Autowired
 //	private TechStackRepository techStackRepository;
